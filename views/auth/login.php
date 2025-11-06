@@ -1,127 +1,79 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Nightbot Admin</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <script>
+        // Theme management
+        const getTheme = () => localStorage.getItem('theme') || 'system';
+        const applyTheme = (theme) => {
+            if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        };
+        // Apply theme before page renders
+        applyTheme(getTheme());
+    </script>
 </head>
-<body>
-    <div class="login-container">
-        <div class="login-box">
-            <h1>Nightbot Admin</h1>
-            <h2>Connexion</h2>
+<body class="bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-800 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen flex items-center justify-center transition-all duration-300">
+    <div class="w-full max-w-md px-4">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 transition-colors">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Nightbot Admin</h1>
+                <p class="text-gray-600 dark:text-gray-400">Connexion</p>
+            </div>
 
             <?php if (isset($error)): ?>
-                <div class="error"><?= htmlspecialchars($error) ?></div>
+                <div class="mb-6 bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 text-red-700 dark:text-red-400 p-4 rounded">
+                    <?= htmlspecialchars($error) ?>
+                </div>
             <?php endif; ?>
 
-            <form method="POST" action="/login">
-                <div class="form-group">
-                    <label for="username">Nom d'utilisateur</label>
-                    <input type="text" id="username" name="username" required autofocus>
+            <form method="POST" action="/login" class="space-y-6">
+                <div>
+                    <label for="username" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                        Nom d'utilisateur
+                    </label>
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        required
+                        autofocus
+                        class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:border-transparent transition-all"
+                    >
                 </div>
 
-                <div class="form-group">
-                    <label for="password">Mot de passe</label>
-                    <input type="password" id="password" name="password" required>
+                <div>
+                    <label for="password" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                        Mot de passe
+                    </label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        required
+                        class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:border-transparent transition-all"
+                    >
                 </div>
 
-                <button type="submit" class="btn btn-primary btn-block">Se connecter</button>
+                <button
+                    type="submit"
+                    class="w-full bg-purple-600 hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600 text-white font-semibold py-3 px-4 rounded-lg transition-colors shadow-lg hover:shadow-xl"
+                >
+                    Se connecter
+                </button>
             </form>
         </div>
     </div>
-
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-        }
-
-        .login-container {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        .login-box {
-            background: white;
-            padding: 3rem;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 420px;
-        }
-
-        .login-box h1 {
-            font-size: 1.75rem;
-            color: #2c3e50;
-            margin-bottom: 0.5rem;
-            text-align: center;
-        }
-
-        .login-box h2 {
-            font-size: 1.25rem;
-            color: #666;
-            margin-bottom: 2rem;
-            text-align: center;
-            font-weight: 400;
-        }
-
-        .login-box .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .login-box label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: #333;
-            font-size: 0.95rem;
-        }
-
-        .login-box input[type="text"],
-        .login-box input[type="password"] {
-            width: 100%;
-            padding: 0.875rem 1rem;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: all 0.3s;
-            font-family: inherit;
-        }
-
-        .login-box input[type="text"]:focus,
-        .login-box input[type="password"]:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .login-box input[type="text"]::placeholder,
-        .login-box input[type="password"]::placeholder {
-            color: #999;
-        }
-
-        .btn-block {
-            width: 100%;
-            padding: 1rem;
-            font-size: 1rem;
-            font-weight: 600;
-            margin-top: 0.5rem;
-        }
-
-        .error {
-            background: #fee;
-            color: #c33;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-            border-left: 4px solid #c33;
-            font-size: 0.95rem;
-        }
-    </style>
 </body>
 </html>

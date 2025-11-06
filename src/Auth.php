@@ -15,29 +15,21 @@ class Auth
 
         $storedPassword = $users[$username];
 
-        // Vérifier si le mot de passe est déjà hashé
+        // Les mots de passe sont toujours hashés maintenant (auto-hashés au chargement)
         if (str_starts_with($storedPassword, 'phpass:')) {
-            // Vérifier avec le hash
             $hash = str_replace('phpass:', '', $storedPassword);
             return password_verify($password, $hash);
-        } else {
-            // Mot de passe en clair, vérifier et hasher
-            if ($password === $storedPassword) {
-                // Hasher et sauvegarder
-                self::hashAndSavePassword($username, $password, $users);
-                return true;
+        } elseif (str_starts_with($storedPassword, 'md5:')) {
+            // Support MD5 legacy (format: md5:salt:hash)
+            $parts = explode(':', $storedPassword, 3);
+            if (count($parts) === 3) {
+                $salt = $parts[1];
+                $expectedHash = $parts[2];
+                return md5($salt . $password) === $expectedHash;
             }
-            return false;
         }
-    }
 
-    private static function hashAndSavePassword(string $username, string $password, array $users): void
-    {
-        $hash = password_hash($password, PASSWORD_BCRYPT);
-        $users[$username] = 'phpass:' . $hash;
-
-        // Sauvegarder via Config
-        Config::saveUsers($users);
+        return false;
     }
 
     private static function startSession(): void

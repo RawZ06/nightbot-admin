@@ -42,7 +42,7 @@ class Config
 
     /**
      * Charge les utilisateurs depuis les variables d'environnement
-     * Les mots de passe seront hashés au premier login et écrits dans ce fichier
+     * Les mots de passe seront hashés automatiquement s'ils sont en clair
      */
     private static function loadUsers(): array
     {
@@ -56,8 +56,24 @@ class Config
             $users[$adminUsername] = $adminPassword;
         }
 
-        // Ajouter des utilisateurs supplémentaires ici (seront auto-hashés au login)
+        // Ajouter des utilisateurs supplémentaires ici (seront auto-hashés)
         $users['papy'] = 'papy';
+
+        // Auto-hasher tous les mots de passe en clair
+        $needsSave = false;
+        foreach ($users as $username => $password) {
+            if (!str_starts_with($password, 'phpass:') && !str_starts_with($password, 'md5:')) {
+                // Mot de passe en clair, le hasher
+                $hash = password_hash($password, PASSWORD_BCRYPT);
+                $users[$username] = 'phpass:' . $hash;
+                $needsSave = true;
+            }
+        }
+
+        // Sauvegarder si des mots de passe ont été hashés
+        if ($needsSave) {
+            self::saveUsers($users);
+        }
 
         return $users;
     }

@@ -1,4 +1,4 @@
-<div class="container help-page">
+<div class="max-w-4xl mx-auto space-y-8">
     <h2>Guide d'utilisation - Écriture de code pour Nightbot</h2>
 
     <section class="help-section">
@@ -252,85 +252,193 @@ try {
 </div>
 
 <style>
-.help-page {
-    max-width: 900px;
+h2 {
+    font-size: 1.875rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
 }
 
 .help-section {
-    margin-bottom: 3rem;
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
 }
 
 .help-section h3 {
-    color: #2c3e50;
-    border-bottom: 2px solid #3498db;
+    font-size: 1.25rem;
+    font-weight: 700;
+    border-bottom: 2px solid rgb(168 85 247);
     padding-bottom: 0.5rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.help-section p {
+    color: rgb(55 65 81);
+    line-height: 1.6;
 }
 
 .code-example {
-    background: #f8f9fa;
-    padding: 1.5rem;
-    border-radius: 8px;
-    margin-bottom: 1.5rem;
-    border-left: 4px solid #3498db;
-}
-
-.code-example h4 {
-    margin-top: 0;
-    color: #2c3e50;
-}
-
-.code-example code {
-    background: #e9ecef;
-    padding: 0.2rem 0.4rem;
-    border-radius: 3px;
-    font-family: 'Monaco', 'Courier New', monospace;
-}
-
-.code-example pre {
-    background: #2c3e50;
-    color: #ecf0f1;
+    background: rgb(249 250 251);
     padding: 1rem;
-    border-radius: 4px;
-    overflow-x: auto;
+    border-radius: 0.5rem;
+    border-left: 4px solid rgb(59 130 246);
     margin: 1rem 0;
 }
 
+.code-example h4 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.code-example code {
+    padding: 0.125rem 0.5rem;
+    background: rgb(229 231 235);
+    color: rgb(168 85 247);
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    font-family: monospace;
+}
+
+.code-example pre {
+    background: rgb(31 41 55);
+    color: rgb(243 244 246);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    margin: 0.5rem 0;
+}
+
 .code-example pre code {
-    background: none;
-    color: inherit;
+    background: transparent;
+    color: rgb(243 244 246);
     padding: 0;
 }
 
 .api-reference {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1rem;
 }
 
 .api-endpoint {
     background: white;
-    border: 1px solid #dee2e6;
-    border-radius: 8px;
-    padding: 1.5rem;
+    border: 1px solid rgb(229 231 235);
+    border-radius: 0.5rem;
+    padding: 1rem;
 }
 
 .api-endpoint h4 {
-    margin-top: 0;
-    color: #e74c3c;
-    font-family: 'Monaco', 'Courier New', monospace;
-    background: #f8f9fa;
-    padding: 0.5rem;
-    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: rgb(239 68 68);
+    font-family: monospace;
+    background: rgb(243 244 246);
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.api-endpoint p {
+    font-size: 0.875rem;
+    color: rgb(107 114 128);
 }
 
 .help-section ul {
+    list-style: disc;
     list-style-position: inside;
+    color: rgb(55 65 81);
     line-height: 2;
 }
 
 .help-section ol {
+    list-style: decimal;
+    list-style-position: inside;
+    color: rgb(55 65 81);
     line-height: 2;
     padding-left: 1.5rem;
+}
+
+.help-section strong {
+    font-weight: 600;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+    .dark .help-section {
+        background: rgb(31 41 55);
+    }
+
+    .dark .help-section p,
+    .dark .help-section ul,
+    .dark .help-section ol {
+        color: rgb(209 213 219);
+    }
+
+    .dark .code-example {
+        background: rgb(17 24 39);
+    }
+
+    .dark .code-example code {
+        background: rgb(31 41 55);
+        color: rgb(192 132 252);
+    }
+
+    .dark .code-example pre {
+        background: rgb(17 24 39);
+    }
+
+    .dark .api-endpoint {
+        background: rgb(31 41 55);
+        border-color: rgb(75 85 99);
+    }
+
+    .dark .api-endpoint h4 {
+        background: rgb(17 24 39);
+        color: rgb(248 113 113);
+    }
+
+    .dark .api-endpoint p {
+        color: rgb(156 163 175);
+    }
+}
+
+html.dark .help-section {
+    background: rgb(31 41 55);
+}
+
+html.dark .help-section p,
+html.dark .help-section ul,
+html.dark .help-section ol {
+    color: rgb(209 213 219);
+}
+
+html.dark .code-example {
+    background: rgb(17 24 39);
+}
+
+html.dark .code-example code {
+    background: rgb(31 41 55);
+    color: rgb(192 132 252);
+}
+
+html.dark .code-example pre {
+    background: rgb(17 24 39);
+}
+
+html.dark .api-endpoint {
+    background: rgb(31 41 55);
+    border-color: rgb(75 85 99);
+}
+
+html.dark .api-endpoint h4 {
+    background: rgb(17 24 39);
+    color: rgb(248 113 113);
+}
+
+html.dark .api-endpoint p {
+    color: rgb(156 163 175);
 }
 </style>
