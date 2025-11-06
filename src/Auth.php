@@ -15,8 +15,9 @@ class Auth
 
         $storedPassword = $users[$username];
 
-        // Les mots de passe sont toujours hashés maintenant (auto-hashés au chargement)
+        // Vérifier le type de mot de passe
         if (str_starts_with($storedPassword, 'phpass:')) {
+            // Mot de passe hashé avec bcrypt
             $hash = str_replace('phpass:', '', $storedPassword);
             return password_verify($password, $hash);
         } elseif (str_starts_with($storedPassword, 'md5:')) {
@@ -27,6 +28,9 @@ class Auth
                 $expectedHash = $parts[2];
                 return md5($salt . $password) === $expectedHash;
             }
+        } else {
+            // Mot de passe en clair (depuis env, pas encore hashé)
+            return $password === $storedPassword;
         }
 
         return false;
