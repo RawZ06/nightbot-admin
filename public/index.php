@@ -51,6 +51,8 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->post('/admin/quote/{id:\d+}/delete', [QuoteController::class, 'delete']);
     $r->post('/admin/quote/{id:\d+}/item', [QuoteController::class, 'addItem']);
     $r->post('/admin/quote/{id:\d+}/item/{item_id:\d+}/delete', [QuoteController::class, 'removeItem']);
+    $r->post('/admin/quote/{id:\d+}/item/{item_id:\d+}/update', [QuoteController::class, 'updateItem']);
+    $r->post('/admin/quote/{id:\d+}/items/clear', [QuoteController::class, 'clearAllItems']);
 
     // Admin - Help
     $r->get('/admin/help', [AdminController::class, 'help']);
@@ -74,6 +76,11 @@ if (false !== $pos = strpos($uri, '?')) {
     $uri = substr($uri, 0, $pos);
 }
 $uri = rawurldecode($uri);
+
+// Remove trailing slash (except for root)
+if ($uri !== '/' && str_ends_with($uri, '/')) {
+    $uri = rtrim($uri, '/');
+}
 
 $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
 

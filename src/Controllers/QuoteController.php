@@ -118,6 +118,41 @@ class QuoteController
         return '';
     }
 
+    public function updateItem(array $vars): string
+    {
+        Auth::require();
+        $id = (int) $vars['id'];
+        $itemId = (int) $vars['item_id'];
+        $quote = Quote::find($id);
+
+        if ($quote === null) {
+            http_response_code(404);
+            return '404';
+        }
+
+        $value = $_POST['value'] ?? '';
+        if (!empty($value)) {
+            $quote->updateItem($itemId, $value);
+        }
+
+        header('Location: /admin/quote/' . $id);
+        return '';
+    }
+
+    public function clearAllItems(array $vars): string
+    {
+        Auth::require();
+        $id = (int) $vars['id'];
+        $quote = Quote::find($id);
+
+        if ($quote !== null) {
+            $quote->clearAllItems();
+        }
+
+        header('Location: /admin/quote/' . $id);
+        return '';
+    }
+
     private function render(string $view, array $data = []): string
     {
         extract($data);

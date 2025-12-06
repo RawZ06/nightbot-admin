@@ -49,7 +49,16 @@
 
     <?php if ($quote !== null): ?>
         <div class="border-t border-gray-200 dark:border-gray-700 pt-6">
-            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Éléments de la quote</h3>
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white">Éléments de la quote</h3>
+                <?php if (!empty($items)): ?>
+                    <form method="POST" action="/admin/quote/<?= $quote->id ?>/items/clear" class="inline">
+                        <button type="submit" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors" onclick="return confirm('Supprimer TOUS les éléments de cette quote ?')">
+                            Supprimer tout
+                        </button>
+                    </form>
+                <?php endif; ?>
+            </div>
 
             <form method="POST" action="/admin/quote/<?= $quote->id ?>/item" class="mb-6">
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
@@ -87,20 +96,66 @@
                         </thead>
                         <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                             <?php foreach ($items as $item): ?>
-                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" id="item-row-<?= $item['id'] ?>">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400"><?= $item['id'] ?></td>
-                                    <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-100"><?= htmlspecialchars($item['value']) ?></td>
+                                    <td class="px-6 py-4 text-sm">
+                                        <div class="item-display-<?= $item['id'] ?> text-gray-900 dark:text-gray-100"><?= htmlspecialchars($item['value']) ?></div>
+                                        <form method="POST" action="/admin/quote/<?= $quote->id ?>/item/<?= $item['id'] ?>/update" class="item-edit-<?= $item['id'] ?> hidden">
+                                            <input
+                                                type="text"
+                                                name="value"
+                                                value="<?= htmlspecialchars($item['value']) ?>"
+                                                class="w-full px-3 py-1 rounded border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                            >
+                                        </form>
+                                    </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400"><?= date('d/m/Y H:i', strtotime($item['created_at'])) ?></td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <form method="POST" action="/admin/quote/<?= $quote->id ?>/item/<?= $item['id'] ?>/delete" class="inline">
-                                            <button type="submit" class="inline-flex items-center px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded transition-colors" onclick="return confirm('Supprimer cet élément ?')">Supprimer</button>
-                                        </form>
+                                        <div class="flex gap-2 justify-end">
+                                            <button type="button" onclick="toggleEdit(<?= $item['id'] ?>)" class="item-edit-btn-<?= $item['id'] ?> inline-flex items-center px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors">
+                                                Modifier
+                                            </button>
+                                            <button type="button" onclick="saveEdit(<?= $item['id'] ?>)" class="item-save-btn-<?= $item['id'] ?> hidden inline-flex items-center px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded transition-colors">
+                                                Enregistrer
+                                            </button>
+                                            <button type="button" onclick="cancelEdit(<?= $item['id'] ?>, '<?= htmlspecialchars($item['value'], ENT_QUOTES) ?>')" class="item-cancel-btn-<?= $item['id'] ?> hidden inline-flex items-center px-3 py-1 bg-gray-600 hover:bg-gray-700 text-white rounded transition-colors">
+                                                Annuler
+                                            </button>
+                                            <form method="POST" action="/admin/quote/<?= $quote->id ?>/item/<?= $item['id'] ?>/delete" class="inline">
+                                                <button type="submit" class="inline-flex items-center px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded transition-colors" onclick="return confirm('Supprimer cet élément ?')">
+                                                    Supprimer
+                                                </button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>
+
+                <script>
+                function toggleEdit(itemId) {
+                    document.querySelector('.item-display-' + itemId).classList.add('hidden');
+                    document.querySelector('.item-edit-' + itemId).classList.remove('hidden');
+                    document.querySelector('.item-edit-btn-' + itemId).classList.add('hidden');
+                    document.querySelector('.item-save-btn-' + itemId).classList.remove('hidden');
+                    document.querySelector('.item-cancel-btn-' + itemId).classList.remove('hidden');
+                }
+
+                function cancelEdit(itemId, originalValue) {
+                    document.querySelector('.item-display-' + itemId).classList.remove('hidden');
+                    document.querySelector('.item-edit-' + itemId).classList.add('hidden');
+                    document.querySelector('.item-edit-btn-' + itemId).classList.remove('hidden');
+                    document.querySelector('.item-save-btn-' + itemId).classList.add('hidden');
+                    document.querySelector('.item-cancel-btn-' + itemId).classList.add('hidden');
+                    document.querySelector('.item-edit-' + itemId + ' input').value = originalValue;
+                }
+
+                function saveEdit(itemId) {
+                    document.querySelector('.item-edit-' + itemId).submit();
+                }
+                </script>
             <?php endif; ?>
         </div>
     <?php endif; ?>

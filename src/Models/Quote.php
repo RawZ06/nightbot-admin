@@ -129,6 +129,32 @@ class Quote
         return $stmt->execute(['id' => $itemId, 'quote_id' => $this->id]);
     }
 
+    public function clearAllItems(): bool
+    {
+        if ($this->id === null) {
+            return false;
+        }
+
+        $db = Database::getConnection();
+        $stmt = $db->prepare('DELETE FROM quote_items WHERE quote_id = :quote_id');
+        return $stmt->execute(['quote_id' => $this->id]);
+    }
+
+    public function updateItem(int $itemId, string $value): bool
+    {
+        if ($this->id === null) {
+            return false;
+        }
+
+        $db = Database::getConnection();
+        $stmt = $db->prepare('UPDATE quote_items SET value = :value WHERE id = :id AND quote_id = :quote_id');
+        return $stmt->execute([
+            'id' => $itemId,
+            'quote_id' => $this->id,
+            'value' => $value
+        ]);
+    }
+
     public function getRandomItem(): ?array
     {
         if ($this->id === null) {
