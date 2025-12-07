@@ -107,9 +107,10 @@ class DenoExecutor
                     return encodeURIComponent(String(msg)).replace(/%20/g, '+');
                 });
 
-                // Construire l'URL vxrl.xyz: /msg1/msg2/msg3?i=5000&d=1
+                // Construire l'URL vxrl.xyz: /smm/msg1/msg2/msg3?i=5000&d=1
+                // Le préfixe /smm/ est nécessaire pour vxrl.xyz
                 const path = encodedMessages.join('/');
-                const url = 'https://vxrl.xyz/' + path + '?i=' + options.interval + '&d=' + options.delay;
+                const url = 'https://vxrl.xyz/smm/' + path + '?i=' + options.interval + '&d=' + options.delay;
 
                 // Retourner juste l'URL, elle sera déjà dans un $(urlfetch) de Nightbot
                 return url;
