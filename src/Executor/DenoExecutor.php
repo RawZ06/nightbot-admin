@@ -102,9 +102,9 @@ class DenoExecutor
                     }
                 }
 
-                // Encoder les messages pour l'URL (remplacer espaces par +, encoder caractères spéciaux)
+                // Encoder les messages pour l'URL (garder %20 pour les espaces)
                 const encodedMessages = messages.map(msg => {
-                    return encodeURIComponent(String(msg)).replace(/%20/g, '+');
+                    return encodeURIComponent(String(msg));
                 });
 
                 // Construire l'URL vxrl.xyz: /smm/msg1/msg2/msg3?i=5000&d=1
