@@ -111,8 +111,8 @@ class DenoExecutor
                 const path = encodedMessages.join('/');
                 const url = 'https://vxrl.xyz/' + path + '?i=' + options.interval + '&d=' + options.delay;
 
-                // Retourner l'URL au lieu des messages eux-mêmes
-                return '\$(urlfetch ' + url + ')';
+                // Retourner juste l'URL, elle sera déjà dans un $(urlfetch) de Nightbot
+                return url;
             }
         }
 

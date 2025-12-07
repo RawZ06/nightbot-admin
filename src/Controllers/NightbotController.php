@@ -32,7 +32,14 @@ class NightbotController
         $executor = new DenoExecutor();
         $result = $executor->execute($command->code, $args);
 
-        // Retourner le résultat en texte brut pour Nightbot
+        // Si le résultat est une URL vxrl.xyz, rediriger vers celle-ci
+        if (str_starts_with($result, 'https://vxrl.xyz/')) {
+            header('Location: ' . $result);
+            http_response_code(302);
+            return '';
+        }
+
+        // Sinon, retourner le résultat en texte brut pour Nightbot
         header('Content-Type: text/plain; charset=utf-8');
         return $result;
     }
