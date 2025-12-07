@@ -83,6 +83,39 @@ class DenoExecutor
         // Données des quotes chargées depuis la DB
         const quotesData = {$quotesJson};
 
+        // Classe Message pour générer des URLs vxrl.xyz
+        class MessageClass {
+            // Créer un message découpé en plusieurs parties via vxrl.xyz
+            // Usage: return Message.split("msg1", "msg2", "msg3", { interval: 5000, delay: 1 })
+            // Options par défaut: interval=5000ms (5s), delay=1s
+            static split(...args) {
+                // Séparer les messages des options
+                let messages = args;
+                let options = { interval: 500, delay: 1 };
+
+                // Si le dernier argument est un objet avec interval ou delay, c'est les options
+                if (args.length > 0 && typeof args[args.length - 1] === 'object' && !Array.isArray(args[args.length - 1])) {
+                    const lastArg = args[args.length - 1];
+                    if (lastArg.interval !== undefined || lastArg.delay !== undefined) {
+                        options = { ...options, ...lastArg };
+                        messages = args.slice(0, -1);
+                    }
+                }
+
+                // Encoder les messages pour l'URL (remplacer espaces par +, encoder caractères spéciaux)
+                const encodedMessages = messages.map(msg => {
+                    return encodeURIComponent(String(msg)).replace(/%20/g, '+');
+                });
+
+                // Construire l'URL vxrl.xyz: /msg1/msg2/msg3?i=5000&d=1
+                const path = encodedMessages.join('/');
+                const url = \`https://vxrl.xyz/\${path}?i=\${options.interval}&d=\${options.delay}\`;
+
+                // Retourner l'URL au lieu des messages eux-mêmes
+                return \`\$(urlfetch \${url})\`;
+            }
+        }
+
         // Classe Quote statique (style Java avec chaînage)
         class QuoteClass {
             // Spécifier le nom de la quote
@@ -146,16 +179,17 @@ class DenoExecutor
             }
         }
 
-        // Exposer la classe Quote globalement
+        // Exposer les classes globalement
         const Quote = QuoteClass;
+        const Message = MessageClass;
 
         // Code utilisateur (échappé en JSON)
         const userCodeString = {$userCodeJson};
 
         // Créer et exécuter la fonction (support async/await)
         const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
-        const userFunction = new AsyncFunction('args', 'Quote', userCodeString);
-        const result = await userFunction(args, Quote);
+        const userFunction = new AsyncFunction('args', 'Quote', 'Message', userCodeString);
+        const result = await userFunction(args, Quote, Message);
 
         if (result !== undefined) {
             console.log(String(result));
