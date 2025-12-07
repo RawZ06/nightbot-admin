@@ -109,10 +109,10 @@ class DenoExecutor
 
                 // Construire l'URL vxrl.xyz: /msg1/msg2/msg3?i=5000&d=1
                 const path = encodedMessages.join('/');
-                const url = \`https://vxrl.xyz/\${path}?i=\${options.interval}&d=\${options.delay}\`;
+                const url = 'https://vxrl.xyz/' + path + '?i=' + options.interval + '&d=' + options.delay;
 
                 // Retourner l'URL au lieu des messages eux-mêmes
-                return \`\$(urlfetch \${url})\`;
+                return '\$(urlfetch ' + url + ')';
             }
         }
 
