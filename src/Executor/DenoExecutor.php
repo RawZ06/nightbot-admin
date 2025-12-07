@@ -91,7 +91,7 @@ class DenoExecutor
             static split(...args) {
                 // Séparer les messages des options
                 let messages = args;
-                let options = { interval: 500, delay: 1 };
+                let options = { interval: 5000, delay: 1 };
 
                 // Si le dernier argument est un objet avec interval ou delay, c'est les options
                 if (args.length > 0 && typeof args[args.length - 1] === 'object' && !Array.isArray(args[args.length - 1])) {
